@@ -26,24 +26,25 @@ def login(cred_file):
 
     r = requests.post('http://localhost:5000/login', params=params)
     if r.status_code == 200 and r.json()['Response'] == 'Success':
-        logged_in = True
-        return True
+        print 'Success'
+    else:
+        print 'Login failure:'
+        print r.text
+
+@jumper.command()
+@click.option('--verbose/--brief', default=False)
+def user(verbose):
+    r = requests.get('http://localhost:5000/user')
+
+    if not verbose:
+        print r.json()['Response']['user']['displayName']
     else:
         print r.text
-        return False
+
 
 @jumper.command()
-def user():
-    r = requests.get('http://localhost:5000/user')
-    print r.text
-
-@jumper.command()
-def find():
-    r = requests.get('http://localhost:5000/find')
-    print r.text
-
-@jumper.command()
-def characters():
+@click.option('--verbose/--brief', default=False)
+def characters(verbose):
     def _get_class(classType):
         if classType == 0:
             return 'Titan'
@@ -59,14 +60,15 @@ def characters():
             return 'Female'
 
     r = requests.get('http://localhost:5000/user/characters')
-    for character in r.json()['Response']['data']['characters']:
-        print 'Class: %s, Gender: %s, Level: %d' % (
-            _get_class(character['characterBase']['classType']),
-            _get_gender(character['characterBase']['genderType']),
-            character['characterLevel']
-        )
-
-    #print r.text
+    if not verbose:
+        for character in r.json()['Response']['data']['characters']:
+            print 'Class: %s, Gender: %s, Level: %d' % (
+                _get_class(character['characterBase']['classType']),
+                _get_gender(character['characterBase']['genderType']),
+                character['characterLevel']
+            )
+    else:
+        print r.text
 
 @jumper.command()
 def manifest():
