@@ -25,7 +25,7 @@ def login(cred_file):
     }
 
     r = requests.post('http://localhost:5000/login', params=params)
-    if r.status_code == 200 and r.json()['response'] == 'Success':
+    if r.status_code == 200 and r.json()['Response'] == 'Success':
         logged_in = True
         return True
     else:
