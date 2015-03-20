@@ -10,7 +10,17 @@ def jumper():
     pass
 
 @jumper.command()
-@click.option('--creds_file', default='creds.yml')
+@click.option(
+    '--creds_file',
+    default='creds.yml',
+    type=click.Path(
+        exists=True,
+        file_okay=True,
+        readable=True,
+        resolve_path=True
+    ),
+    help='Path to credentials file'
+)
 def login(creds_file):
     with open(creds_file) as fd:
         creds = yaml.load(fd)
@@ -29,7 +39,7 @@ def login(creds_file):
         print r.text
 
 @jumper.command()
-@click.option('--verbose/--brief', default=False)
+@click.option('--verbose/--brief', default=False, help='Show full JSON output or summary')
 def user(verbose):
     r = requests.get('http://localhost:5000/user')
 
@@ -40,7 +50,7 @@ def user(verbose):
 
 
 @jumper.command()
-@click.option('--verbose/--brief', default=False)
+@click.option('--verbose/--brief', default=False, help='Show full JSON output or summary')
 def characters(verbose):
     def _get_class(classType):
         if classType == 0:
