@@ -10,12 +10,9 @@ def jumper():
     pass
 
 @jumper.command()
-@click.option('--cred_file', default='creds.yml')
-def login(cred_file):
-    if not cred_file:
-        return False
-
-    with open(cred_file) as fd:
+@click.option('--creds_file', default='creds.yml')
+def login(creds_file):
+    with open(creds_file) as fd:
         creds = yaml.load(fd)
 
     params = {
